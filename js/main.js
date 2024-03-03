@@ -2,29 +2,54 @@ const colors = [
     'red', 'blue', 'yellow', 'green'
 ]
 
-let level = 1
+let level = 0
 let highScore = 0
-let soundColors = []
+let colorsPattern = []
+const playBtn = document.getElementById('play')
 
 
-function getRandomSound(colors) {
+function getRandomColor() {
     return colors[Math.floor(Math.random() * colors.length)]
 }
 
-
-for (let i = 0; i < level; i++) {
-    soundColors.push(getRandomSound(colors))
+function addColor() {
+    colorsPattern.push(getRandomColor());
 }
 
-function playSounds() {
-    for (let i = 0; i < soundColors.length; i++) {
-        setTimeout(function() {
-            let sound = new Audio(`../sounds/${soundColors[i]}.mp3`)
-            sound.play()
-        }, i * 1000)
+const greenBtn = document.querySelector(".green");
+const redBtn = document.querySelector(".red");
+const blueBtn = document.querySelector(".blue");
+const yellowBtn = document.querySelector(".yellow");
+
+function handleClick() {
+    const color = this.getAttribute('data-tile');
+}
+
+function flash(tile){
+    const selectedColor = document.querySelector(`.${tile}`)
+    return new Promise((resolve,reject) => {
+        setTimeout(() => {
+            selectedColor.classList.remove('inactive')
+            setTimeout(() => {
+                selectedColor.classList.add('inactive')
+                resolve()
+            }, 500);
+        }, 1000)
+        
+    })
+}
+
+
+
+function main() {
+    addColor()
+    for (let tile of colorsPattern) {
+        flash(tile) 
     }
 }
-document.getElementById('play').addEventListener('click', playSounds)
 
+playBtn.addEventListener('click', main)
 
+const board = document.querySelector(".board")
 
+board.classList.remove("unclickable")
