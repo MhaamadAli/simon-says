@@ -1,55 +1,46 @@
-const colors = [
-    'red', 'blue', 'yellow', 'green'
-]
+const colors = ["red", "green", "blue", "yellow"];
+let colorPattern = [];
+let userPattern = [];
+let level = 0;
+let highScore = 0;
 
-let level = 0
-let highScore = 0
-let colorsPattern = []
-const playBtn = document.getElementById('play')
+const board = document.querySelector(".board");
+const highScoreLabel = document.getElementById("high-score");
+const levelLabel = document.getElementById("level");
+const playBtn = document.getElementById("play");
 
+function playSound(color) {
+    const audio = new Audio(`./sounds/${color}.mp3`);
+    audio.play();
+}
 
 function getRandomColor() {
-    return colors[Math.floor(Math.random() * colors.length)]
+    return colors[Math.floor(Math.random() * 4)];
 }
 
-function addColor() {
-    colorsPattern.push(getRandomColor());
-}
-
-const greenBtn = document.querySelector(".green");
-const redBtn = document.querySelector(".red");
-const blueBtn = document.querySelector(".blue");
-const yellowBtn = document.querySelector(".yellow");
-
-function handleClick() {
-    const color = this.getAttribute('data-tile');
-}
-
-function flash(tile){
-    const selectedColor = document.querySelector(`.${tile}`)
-    return new Promise((resolve,reject) => {
-        setTimeout(() => {
-            selectedColor.classList.remove('inactive')
-            setTimeout(() => {
-                selectedColor.classList.add('inactive')
-                resolve()
-            }, 500);
-        }, 1000)
-        
-    })
+function addToPattern() {
+    colorPattern.push(getRandomColor());
 }
 
 
 
-function main() {
-    addColor()
-    for (let tile of colorsPattern) {
-        flash(tile) 
-    }
+function disableUserClicks() {
+    board.classList.add("unclickable");
 }
 
-playBtn.addEventListener('click', main)
+function enableUserClicks() {
+    board.classList.remove("unclickable");
+}
 
-const board = document.querySelector(".board")
 
-board.classList.remove("unclickable")
+
+playBtn.addEventListener("click", () => {
+    playBtn.textContent = "RESTART";
+    resetGame();
+    addToPattern();
+    highlightPattern();
+});
+
+document.querySelectorAll(".tile").forEach(tile => {
+    tile.addEventListener("click", handleTileClick);
+});
