@@ -17,6 +17,49 @@ function playSound(color) {
 function getRandomColor() {
     return colors[Math.floor(Math.random() * 4)];
 }
+function checkUserPattern() {
+    for (let i = 0; i < userPattern.length; i++) {
+        if (userPattern[i] !== colorPattern[i]) {
+            gameOver();
+            return;
+        }
+    }
+    if (userPattern.length === colorPattern.length) {
+        if (level === 11) {
+            gameWin();
+            return;
+        }
+        level++;
+        addToPattern();
+        userPattern = [];
+        updateScoreLabels();
+        highlightPattern();
+    }
+}
+
+function highlightColorTile(color) {
+    const tile = document.querySelector(`[data-tile="${color}"]`);
+    tile.classList.remove("inactive");
+    playSound(color);
+    setTimeout(() => {
+        tile.classList.add("inactive");
+    }, 500);
+}
+
+function highlightPattern() {
+    disableUserClicks();
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i >= colorPattern.length) {
+            clearInterval(interval);
+            enableUserClicks();
+            return;
+        }
+        highlightColorTile(colors[colorPattern[i]]);
+        i++;
+    }, 1000);
+}
+
 
 function addToPattern() {
     colorPattern.push(getRandomColor());
