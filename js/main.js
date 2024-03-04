@@ -76,6 +76,7 @@ function checkUserPattern() {
 
 
 function gameOver() {
+    playSound("angry");
     playSound("game-over");
     disableUserClicks();
     alert("Game Over! Try again.");
