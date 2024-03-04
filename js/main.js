@@ -17,25 +17,6 @@ function playSound(color) {
 function getRandomColor() {
     return colors[Math.floor(Math.random() * 4)];
 }
-function checkUserPattern() {
-    for (let i = 0; i < userPattern.length; i++) {
-        if (userPattern[i] !== colorPattern[i]) {
-            gameOver();
-            return;
-        }
-    }
-    if (userPattern.length === colorPattern.length) {
-        if (level === 11) {
-            gameWin();
-            return;
-        }
-        level++;
-        addToPattern();
-        userPattern = [];
-        updateScoreLabels();
-        highlightPattern();
-    }
-}
 
 function highlightColorTile(color) {
     const tile = document.querySelector(`[data-tile="${color}"]`);
@@ -60,10 +41,53 @@ function highlightPattern() {
     }, 1000);
 }
 
-
 function addToPattern() {
-    colorPattern.push(getRandomColor());
+    colorPattern.push(Math.floor(Math.random() * 4));
 }
+
+
+function resetGame() {
+    colorPattern = [];
+    userPattern = [];
+    level = 0;
+    updateScoreLabels();
+    playBtn.textContent = "PLAY";
+}
+
+function checkUserPattern() {
+    for (let i = 0; i < userPattern.length; i++) {
+        if (userPattern[i] !== colorPattern[i]) {
+            gameOver();
+            return;
+        }
+    }
+    if (userPattern.length === colorPattern.length) {
+        if (level === 11) {
+            gameWin();
+            return;
+        }
+        level++;
+        addToPattern();
+        userPattern = [];
+        updateScoreLabels();
+        highlightPattern();
+    }
+}
+
+
+function gameOver() {
+    playSound("game-over");
+    disableUserClicks();
+    alert("Game Over! Try again.");
+    resetGame();
+}
+
+function gameWin() {
+    playSound("game-win");
+    alert("Congratulations! You won!");
+    resetGame();
+}
+
 
 function handleTileClick(event) {
     if (board.classList.contains("unclickable")) return;
@@ -81,6 +105,13 @@ function enableUserClicks() {
     board.classList.remove("unclickable");
 }
 
+function updateScoreLabels() {
+    levelLabel.textContent = level;
+    if (level > highScore) {
+        highScore = level;
+        highScoreLabel.textContent = highScore;
+    }
+}
 
 
 playBtn.addEventListener("click", () => {
