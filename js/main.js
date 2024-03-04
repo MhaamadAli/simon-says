@@ -22,7 +22,13 @@ function addToPattern() {
     colorPattern.push(getRandomColor());
 }
 
-
+function handleTileClick(event) {
+    if (board.classList.contains("unclickable")) return;
+    const color = event.target.dataset.tile;
+    userPattern.push(colors.indexOf(color));
+    highlightColorTile(color);
+    checkUserPattern();
+}
 
 function disableUserClicks() {
     board.classList.add("unclickable");
